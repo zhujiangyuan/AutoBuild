@@ -1,29 +1,22 @@
-g_default_build_root_path = 'I:\\Application_defualt\\dev\\src'
-g_full_work_path = ''
-g_project_order_list = []
-g_project_order_file_name = '\\auto_build_project_order.txt'
-g_Build_Configuration = '\\TwsBuildConfigurations'
-
-g_hg_command_pull = 'hg pull'
-g_hg_command_update = 'hg update'
-g_gradlew_fAD = 'gradlew.bat fAD'
-g_gradlew_cR = 'gradlew.bat cR'
-g_gradlew_bR = 'gradlew.bat bR'
-
 import sys
 import os
 import datetime
 import AutoBuildHelper
+from AutoBuildConstant import AutoBuildConstant
+
+g_full_work_path = ''
+g_project_order_list = []
 
 # Get input path
+
 arg_num = len(sys.argv)
 if(1 == arg_num):
-   g_full_work_path = g_default_build_root_path
+   g_full_work_path = AutoBuildConstant.m_default_build_root_path
 else:
    g_full_work_path = sys.argv[1]
 
 # Read project order from file
-project_order_file_path = os.getcwd() + g_project_order_file_name
+project_order_file_path = os.getcwd() + '\\' + AutoBuildConstant.m_project_order_file_name
 openfile= open(project_order_file_path)
 while True:
     line = openfile.readline()
@@ -62,23 +55,23 @@ for project_name in g_project_order_list:
 # Update Source code
 for project in g_ordered_project_list:
     os.chdir(project.project_full_path)
-    AutoBuildHelper.RunCommand(g_hg_command_pull)
-    AutoBuildHelper.RunCommand(g_hg_command_update)
+    AutoBuildHelper.RunCommand(AutoBuildConstant.m_hg_command_pull)
+    AutoBuildHelper.RunCommand(AutoBuildConstant.m_hg_command_update)
     
 # Run gradle command
 for project in g_ordered_project_list:
     os.chdir(project.project_full_path)
-    if (False == AutoBuildHelper.ReNameFolderName(project.project_full_path + g_Build_Configuration)):
+    if (False == AutoBuildHelper.ReNameFolderName(project.project_full_path + AutoBuildConstant.m_build_configuration)):
         print('Failed to Rename TwsBuildConfiguration:' + ' for '+ project.project_name)
         break
-    if(False == AutoBuildHelper.RunCommandWithLog(g_gradlew_fAD)):
-        print('Failed to Run Command:' + g_gradlew_fAD + ' for '+ project.project_name)
+    if(False == AutoBuildHelper.RunCommandWithLog(AutoBuildConstant.m_gradlew_fAD)):
+        print('Failed to Run Command:' + AutoBuildConstant.m_gradlew_fAD + ' for '+ project.project_name)
         break
-    if(False == AutoBuildHelper.RunCommandWithLog(g_gradlew_cR)):
-        print('Failed to Run Command:' +  g_gradlew_fAD + ' for '+ project.project_name)
+    if(False == AutoBuildHelper.RunCommandWithLog(AutoBuildConstant.m_gradlew_cR)):
+        print('Failed to Run Command:' +  AutoBuildConstant.m_gradlew_cR + ' for '+ project.project_name)
         break
-    if(False == AutoBuildHelper.RunCommandWithLog(g_gradlew_bR)):
-        print('Failed to Run Command:' + g_gradlew_fAD + ' for '+ project.project_name)
+    if(False == AutoBuildHelper.RunCommandWithLog(AutoBuildConstant.m_gradlew_bR)):
+        print('Failed to Run Command:' + AutoBuildConstant.m_gradlew_fAD + ' for '+ project.project_name)
         break
 
 print('Finsihed!')
