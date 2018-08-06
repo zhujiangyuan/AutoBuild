@@ -18,15 +18,15 @@ def RunCommandWithLog(command, print_msg=True):
            state = False
      return state      
 
-def ReNameFolderName(file_name, must_rename=True):
-      nowTime=datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-
-      try:
-       os.rename(file_name, file_name + '_' + nowTime) 
-      except OSError:
-       print(file_name + ' Can not be renamed')
-       if  must_rename:
-            return False
+def UpdateBuildConfiguration(file_name, must_rename=True):
+      if(os.path.exists(file_name)):
+            nowTime=datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+            try:
+                  os.rename(file_name, file_name + '_' + nowTime) 
+            except OSError:
+                  print(file_name + ' Can not be renamed')
+                  if  must_rename:
+                         return False
 
       return True 
       

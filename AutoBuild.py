@@ -2,6 +2,7 @@ import sys
 import os
 import datetime
 import AutoBuildHelper
+from AutoBuildProject import Project
 from AutoBuildConstant import AutoBuildConstant
 
 g_full_work_path = ''
@@ -27,22 +28,14 @@ while True:
 openfile.close()
 
 #Get all projects
-
-class Poject:
-    ''' This class represents each projec. '''
-    def __init__ (self, project_name, project_full_path):
-        self.project_name = project_name
-        self.project_full_path = project_full_path
-
 g_unordered_project_list = []
 
-# dirpath, dirnames, filenames = os.walk(g_full_work_path)
 file_list = os.listdir(g_full_work_path)
 folder_list = []
 for each_file in file_list:
     file_path = os.path.join(g_full_work_path, each_file)
     if(os.path.isdir(file_path)):
-        each_project = Poject (each_file, file_path)
+        each_project = Project (each_file, file_path)
         g_unordered_project_list.append(each_project)
 
 #Sort project
@@ -61,7 +54,7 @@ for project in g_ordered_project_list:
 # Run gradle command
 for project in g_ordered_project_list:
     os.chdir(project.project_full_path)
-    if (False == AutoBuildHelper.ReNameFolderName(project.project_full_path + AutoBuildConstant.m_build_configuration)):
+    if (False == AutoBuildHelper.UpdateBuildConfiguration(project.project_full_path + "\\"+ AutoBuildConstant.m_build_configuration)):
         print('Failed to Rename TwsBuildConfiguration:' + ' for '+ project.project_name)
         break
     if(False == AutoBuildHelper.RunCommandWithLog(AutoBuildConstant.m_gradlew_fAD)):
